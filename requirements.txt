@@ -1,0 +1,4 @@
+notebook
+pyvips
+natsort
+openslide-python
