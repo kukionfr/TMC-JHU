@@ -72,9 +72,9 @@ def im2ometiff(src):
 
     fn,ext = os.path.splitext(os.path.basename(impth))
     impthrn = impth.replace(fn,os.path.basename(src))
-    os.rename(impth,impthrn) #close openslide object
-    print('wsi is renamed to: ', impthrn)
+    # os.rename(impth,impthrn) #close openslide object
+    # print('wsi is renamed to: ', impthrn)
 
 if __name__=='__main__':
-    src = r"\\10.99.68.54\Digital pathology image lib\HubMap Skin TMC project\HBM296.SPWJ.878-D003"
+    src = r"\\10.99.68.54\Digital pathology image lib\HubMap Skin TMC project\HBM586.TSCL.263-D010"
     im2ometiff(src)
