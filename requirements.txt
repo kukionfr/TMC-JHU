@@ -2,3 +2,5 @@ notebook
 pyvips
 natsort
 openslide-python
+pandas
+openpyxl

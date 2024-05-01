@@ -52,7 +52,7 @@ def im2ometiff(impth,pth_ometiff):
                     PhysicalSizeXUnit="µm"
                     PhysicalSizeY="{mppy}"
                     PhysicalSizeYUnit="µm"
-                    PhysicalSizeZ="5"
+                    PhysicalSizeZ="4"
                     PhysicalSizeZUnit="µm">
             </Pixels>
         </Image>
@@ -61,25 +61,8 @@ def im2ometiff(impth,pth_ometiff):
     print('saving image...')
     # jp2k breaks the format somehow
     start=time()
-    comp.tiffsave(pth_ometiff, compression="jpeg", tile=True, #hubmap requires none compression
+    comp.tiffsave(pth_ometiff, compression="none", tile=True, #hubmap requires none compression
                   tile_width=512, tile_height=512,
                   pyramid=True, subifd=True, bigtiff=True)
     print('elapsed time: {}'.format(round(time()-start)))
     print('ome-tiff saved here: ',pth_ometiff)
-
-    # fn,ext = os.path.splitext(os.path.basename(impth))
-    # impthrn = impth.replace(fn,os.path.basename(src))
-    # os.rename(impth,impthrn) #close openslide object
-    # print('wsi is renamed to: ', impthrn)
-
-if __name__=='__main__':
-    src = r"C:\Users\kyu\Documents\luciane_visium\HE_scans\Mar19_2024"
-    # pth_im = glob.glob(os.path.join(src,'raw\images\*.ndpi'))
-    # pth_im = pth_im[0]
-    pth_ims = glob.glob(os.path.join(src, '*.ndpi'))
-    pth_ims = pth_ims[0:2]
-    for pth_im in pth_ims:
-        pth_ometiff = os.path.join(src,'{}.ome.tiff'.format(os.path.basename(pth_im).replace('.ndpi','')))
-        # print(pth_im,pth_ometiff)
-        im2ometiff(pth_im,pth_ometiff)
-
