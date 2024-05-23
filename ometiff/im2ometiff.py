@@ -52,7 +52,7 @@ def im2ometiff(impth,pth_ometiff):
                     PhysicalSizeXUnit="µm"
                     PhysicalSizeY="{mppy}"
                     PhysicalSizeYUnit="µm"
-                    PhysicalSizeZ="4"
+                    PhysicalSizeZ="5"
                     PhysicalSizeZUnit="µm">
             </Pixels>
         </Image>
