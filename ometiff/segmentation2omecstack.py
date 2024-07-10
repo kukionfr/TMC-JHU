@@ -13,8 +13,9 @@ def ims2omezstack(ims,outputfilepath,q,compression):
             imobj = pyvips.Image.new_from_file(im)
         if imobj.hasalpha(): imobj = imobj[:-1]
         imobjs.append(pyvips.Image.arrayjoin(imobj.bandsplit(), across=1))
-    zlen = len(imobjs)
-    print('Z stack height:', zlen)
+    clen = len(imobjs)
+    print('C stack height:', clen)
+    zlen = 1
 
     if imobj.interpretation == 'b-w':
         bitdepth = 8
@@ -41,7 +42,7 @@ def ims2omezstack(ims,outputfilepath,q,compression):
             <!-- Minimum required fields about image dimensions -->
             <Pixels DimensionOrder="XYCZT"
                     ID="Pixels:0"
-                    SizeC="3"
+                    SizeC="{clen}"
                     SizeT="1"
                     SizeX="{image_width}"
                     SizeY="{image_height}"
@@ -73,10 +74,10 @@ def ims2omezstack(ims,outputfilepath,q,compression):
     print('elapsed time: {}'.format(dt))
 
 if __name__=='__main__':
-    src = r'\\10.99.68.54\Digital pathology image lib\SenNet JHU TDA Project\SN-LW-PA-P002-B2_SNP003\HESS\AlignIM\run5\Dalign__imdsf2__dsfout1_padsz100'
-    pth_ims = [os.path.join(src,_) for _ in os.listdir(src) if _.endswith('.jpg')]
-    pth_ometiff = os.path.join(src,'{}.ome.tiff'.format('SNP003_zstack_q50'))
+    src = r'C:\Users\kyu\Desktop\New Folder\data\labeled_annotation_map_by_class'
+    pth_ims = [os.path.join(src,_) for _ in os.listdir(src) if _.endswith('.png')]
+    pth_ometiff = os.path.join(src,'{}.ome.tiff'.format('segmentations'))
     # print(pth_im,pth_ometiff)
-    if not os.path.exists(pth_ometiff): ims2omezstack(pth_ims,pth_ometiff,q=50,compression='jpeg')
+    if not os.path.exists(pth_ometiff): ims2omezstack(pth_ims,pth_ometiff,q=100,compression='none')
     else: print('exists: ',pth_ometiff)
 
