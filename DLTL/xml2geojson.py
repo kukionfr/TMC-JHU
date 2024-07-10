@@ -34,12 +34,12 @@ def xml2geojson(xml_path):
     df['feat'] = df.apply(lambda x: Feature(geometry=Polygon([x['Coord']]),
                                             properties={"objectType": "annotation", "classification": x['Name']},
                                             id=str(uuid.uuid1())), axis=1)
-    feature_collection = FeatureCollection(df.feat.to_list())
-    return feature_collection
+    # feature_collection = FeatureCollection(df.feat.to_list())
+    return df.feat.to_list()
 
 if __name__ == "__main__":
     xml_src= r"\\10.99.68.51\Kyu\skin_aging\Hopkins_cohort\annotation\12class"
-    dst = r"\\10.99.68.54\Digital pathology image lib\HubMap Skin TMC project\240418_DLTL_master\qpproj\annotation_v7"
+    dst = r"\\10.99.68.54\Digital pathology image lib\HubMap Skin TMC project\240418_DLTL_master\qpproj_back\annotation_v7"
     xmls = [_ for _ in os.listdir(xml_src) if _.endswith('xml')]
     for xml_name in tqdm(xmls):
         geojson = xml2geojson(os.path.join(xml_src,xml_name))
