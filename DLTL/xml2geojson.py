@@ -1,5 +1,5 @@
 import xml.etree.ElementTree as ET
-from geojson import Feature, Polygon, FeatureCollection, dump, loads
+from geojson import Feature, Polygon, dump
 import uuid
 import numpy as np
 import pandas as pd
@@ -32,9 +32,8 @@ def xml2df(xml_ref):
 def xml2geojson(xml_path):
     df = xml2df(xml_path)
     df['feat'] = df.apply(lambda x: Feature(geometry=Polygon([x['Coord']]),
-                                            properties={"objectType": "annotation", "classification": x['Name']},
+                                            properties={"objectType": "annotation", "classification": {'name':x['Name'],'color':[0,0,0]}},
                                             id=str(uuid.uuid1())), axis=1)
-    # feature_collection = FeatureCollection(df.feat.to_list())
     return df.feat.to_list()
 
 if __name__ == "__main__":
