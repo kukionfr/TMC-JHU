@@ -65,12 +65,12 @@ def ims2omezstack(ims,outputfilepath,q,compression):
     print('saving image in {} format ...'.format(compression))
     # jp2k breaks the format somehow
     start=time()
-    # 75% compression by default
-    comp.tiffsave(outputfilepath, compression=compression, tile=True,
-                  tile_width=512, tile_height=512, Q=q,
+    comp.tiffsave(pth_ometiff, compression="deflate", tile=True, #hubmap requires none compression
+                  tile_width=512, tile_height=512,
                   pyramid=True, subifd=True, bigtiff=True)
-    dt = round(time()-start)
+    dt = round(time() - start)
     print('elapsed time: {}'.format(dt))
+    print('ome-tiff saved here: ',pth_ometiff)
 
 if __name__=='__main__':
     src = r'\\10.99.68.54\Digital pathology image lib\SenNet JHU TDA Project\SN-LW-PA-P002-B2_SNP003\HESS\AlignIM\run5\Dalign__imdsf2__dsfout1_padsz100'
