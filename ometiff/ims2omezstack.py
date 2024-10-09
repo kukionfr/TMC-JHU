@@ -4,7 +4,7 @@ os.environ['PATH'] = vipshome + ';' + os.environ['PATH']
 import pyvips  #must use conda to install
 from time import time
 
-def ims2omezstack(ims,outputfilepath,q,compression):
+def ims2omezstack(ims,pth_ometiff,q,compression):
     imobjs = []
     for idx,im in enumerate(ims):
         if im.endswith('ndpi'):
@@ -65,18 +65,17 @@ def ims2omezstack(ims,outputfilepath,q,compression):
     print('saving image in {} format ...'.format(compression))
     # jp2k breaks the format somehow
     start=time()
-    comp.tiffsave(pth_ometiff, compression="deflate", tile=True, #hubmap requires none compression
-                  tile_width=512, tile_height=512,
+    comp.tiffsave(pth_ometiff, compression=compression, tile=True, #hubmap requires none compression
+                  tile_width=512, tile_height=512,Q=q,
                   pyramid=True, subifd=True, bigtiff=True)
     dt = round(time() - start)
     print('elapsed time: {}'.format(dt))
     print('ome-tiff saved here: ',pth_ometiff)
 
 if __name__=='__main__':
-    src = r'\\10.99.68.54\Digital pathology image lib\SenNet JHU TDA Project\SN-LW-PA-P002-B2_SNP003\HESS\AlignIM\run5\Dalign__imdsf2__dsfout1_padsz100'
-    pth_ims = [os.path.join(src,_) for _ in os.listdir(src) if _.endswith('.jpg')]
-    pth_ometiff = os.path.join(src,'{}.ome.tiff'.format('SNP003_zstack_q50'))
-    # print(pth_im,pth_ometiff)
-    if not os.path.exists(pth_ometiff): ims2omezstack(pth_ims,pth_ometiff,q=50,compression='jpeg')
+    src = r'\\10.99.68.54\Digital pathology image lib\JHU\Won Jin Ho\240912 HCC 3D pilot sample\HESS\AlignIM\run1\Dalign_lbl__imdsf16__dsfout1_padsz200\imcrop_png\simple'
+    pth_ims = [os.path.join(src,_) for _ in os.listdir(src) if _.endswith('.png')]
+    pth_ometiff = os.path.join(src,'{}.ome.tiff'.format('deflate_zstack'))
+    if not os.path.exists(pth_ometiff): ims2omezstack(pth_ims,pth_ometiff,q=50,compression='deflate')
     else: print('exists: ',pth_ometiff)
 
