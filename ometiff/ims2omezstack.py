@@ -1,5 +1,5 @@
 import os
-vipshome = r'C:\Users\kyu\Documents\vips-dev-8.15\bin'
+vipshome = r'\\10.99.68.51\Kyu\archive\openslide_vips\vips-dev-8.15\bin'
 os.environ['PATH'] = vipshome + ';' + os.environ['PATH']
 import pyvips  #must use conda to install
 from time import time
