@@ -5,27 +5,26 @@ import pyvips  #must use conda to install
 from time import time
 from natsort import natsorted
 def ims2omezstack(ims,pth_ometiff,q,compression):
-    imobjs = []
-    for idx,im in enumerate(ims):
-        if im.endswith('ndpi'):
-            imobj = pyvips.Image.openslideload(im,level=0)
-        else:
-            imobj = pyvips.Image.new_from_file(im)
-        if imobj.hasalpha(): imobj = imobj[:-1]
-        imobjs.append(pyvips.Image.arrayjoin(imobj.bandsplit(), across=1))
-    zlen = len(imobjs)
+    zs = []
+    clen = 2
+    for c1,c2,c3 in ims:
+        c1 = pyvips.Image.new_from_file(c1)
+        # if c1.hasalpha(): c1 = c1[:-1]
+        c2 = pyvips.Image.new_from_file(c2)
+        # if c2.hasalpha(): c2 = c2[:-1]
+        # c3 = pyvips.Image.new_from_file(c3)
+        # if c3.hasalpha(): c3 = c3[:-1]
+        z= c2.bandjoin(c1)
+        zs.append(z)
+
+    zlen = len(zs)
     print('Z stack height:', zlen)
 
-    # if imobj.interpretation == 'b-w':
-    #     bitdepth = 8
-    # elif imobj.interpretation == 'grey16':
-    #     bitdepth = 16
-    # else:
-    #     bitdepth = 8
+
     bitdepth = 8
-    comp = pyvips.Image.arrayjoin(imobjs, across=1)
-    image_height = imobj.height
-    image_width = imobj.width
+    comp = pyvips.Image.arrayjoin(zs, across=1)
+    image_height = c1.height
+    image_width = c1.width
     comp = comp.copy()
 
     # set minimal OME metadata
@@ -41,7 +40,7 @@ def ims2omezstack(ims,pth_ometiff,q,compression):
             <!-- Minimum required fields about image dimensions -->
             <Pixels DimensionOrder="XYCZT"
                     ID="Pixels:0"
-                    SizeC="3"
+                    SizeC="{clen}"
                     SizeT="1"
                     SizeX="{image_width}"
                     SizeY="{image_height}"
@@ -73,10 +72,27 @@ def ims2omezstack(ims,pth_ometiff,q,compression):
     print('ome-tiff saved here: ',pth_ometiff)
 
 if __name__=='__main__':
-    src = r'\\10.99.68.54\Digital pathology image lib\Lymphedema\L002\raw\images'
-    pth_ims = [os.path.join(src,_) for _ in os.listdir(src) if _.endswith('.ndpi')]
-    pth_ims = natsorted(pth_ims)
-    pth_ometiff = os.path.join(src,'{}.ome.tiff'.format('L002_zstack_none'))
+    # src =  r'\\10.99.68.54\Digital pathology image lib\JHU\Won Jin Ho\240912 HCC 3D pilot sample\HESS\AlignIM\run1\Dalign_lbl__imdsf4__dsfout1_padsz200'
+    # src = r'\\10.99.68.54\Digital pathology image lib\JHU\Won Jin Ho\240912 HCC 3D pilot sample\HESS\AlignIM\run1\Dalign_lbl__imdsf16__dsfout4_padsz200'
+    # src = r'\\10.99.68.54\Digital pathology image lib\JHU\Won Jin Ho\240912 HCC 3D pilot sample\HESS\AlignIM\run1\Dalign_lbl__imdsf4__dsfout4_padsz200'
+    src = r'\\10.99.68.54\Digital pathology image lib\JHU\Won Jin Ho\240912 HCC 3D pilot sample\HESS\AlignIM\run1\Dalign_lbl__imdsf16__dsfout1_padsz200'
+
+
+    c1src = os.path.join(src,'5')
+    c1s = [os.path.join(c1src,_) for _ in os.listdir(c1src) if _.endswith('.png')][0:3]
+    c1s = natsorted(c1s)
+
+    c2src = os.path.join(src, '7')
+    c2s = [os.path.join(c2src,_) for _ in os.listdir(c2src) if _.endswith('.png')][0:3]
+    c2s = natsorted(c2s)
+
+    c3src = os.path.join(src, '8')
+    c3s = [os.path.join(c3src,_) for _ in os.listdir(c3src) if _.endswith('.png')][0:3]
+    c3s = natsorted(c3s)
+
+    pth_ims = zip(c1s,c2s,c3s)
+
+    pth_ometiff = os.path.join(src,'{}.ome.tiff'.format('czstack_75_noalpha'))
     # print(pth_im,pth_ometiff)
     if not os.path.exists(pth_ometiff): ims2omezstack(pth_ims,pth_ometiff,q=50,compression='none')
     else: print('exists: ',pth_ometiff)
