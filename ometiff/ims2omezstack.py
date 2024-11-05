@@ -41,7 +41,7 @@ def ims2omezstack(ims,pth_ometiff,q,compression):
             <!-- Minimum required fields about image dimensions -->
             <Pixels DimensionOrder="XYCZT"
                     ID="Pixels:0"
-                    SizeC="3"
+                    SizeC="1"
                     SizeT="1"
                     SizeX="{image_width}"
                     SizeY="{image_height}"
@@ -75,7 +75,7 @@ def ims2omezstack(ims,pth_ometiff,q,compression):
 if __name__=='__main__':
     src = r'\\10.99.68.54\Digital pathology image lib\JHU\Won Jin Ho\240912 HCC 3D pilot sample\HESS\AlignIM\run1\Dalign_lbl__imdsf16__dsfout1_padsz200\imcrop_png\simple'
     pth_ims = [os.path.join(src,_) for _ in os.listdir(src) if _.endswith('.png')]
-    pth_ometiff = os.path.join(src,'{}.ome.tiff'.format('deflate_zstack'))
+    pth_ometiff = os.path.join(src,'{}.ome.tiff'.format('none_zstack'))
     if not os.path.exists(pth_ometiff): ims2omezstack(pth_ims,pth_ometiff,q=50,compression='deflate')
     else: print('exists: ',pth_ometiff)
 
