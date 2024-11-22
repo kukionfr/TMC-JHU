@@ -4,3 +4,5 @@ natsort
 openslide-python
 pandas
 openpyxl
+spatialdata-io
+pyarrow
